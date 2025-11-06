@@ -111,19 +111,6 @@ To design and build a **public registration landing page** and a **recruitment m
 4. **Dashboard** auto-updates (RxJS + polling).
 5. **Admin views candidate**, navigates between records, and interacts with analytics and map.
 
----
-
-## 🔐 Admin Access Credentials
-
-| Role | Username | Password |
-|------|-----------|-----------|
-| **Admin** | `admin@iisa-portal.co.il` | `Nr!-u0&1f~eLF3I(Nc^` |
-
-> 🧠 Use these credentials to log in to the dashboard’s `/dashboard` route.  
-> Credentials are stored locally for demo purposes — replace them with a secure auth provider (Firebase Auth / Supabase / OIDC) for production.
-
----
-
 ## 💡 Development Commands
 
 ```bash
