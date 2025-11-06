@@ -1,0 +1,132 @@
+<div class="page">
+  <div class="overlay"></div>
+
+  <div class="content-container">
+    @if (isLoading) {
+    <div class="loading-state">
+      <mat-spinner diameter="56"></mat-spinner>
+      <p>Loading applicant details...</p>
+    </div>
+    } @else if (candidate) {
+
+    <mat-card>
+      <mat-card-header>
+        @if (candidate?.profileImageUrl) {
+        <img mat-card-avatar
+             class="avatar"
+             [src]="candidate.profileImageUrl"
+             alt="Profile image" />
+        } @else {
+        <div mat-card-avatar
+             class="avatar avatar-fallback">
+          <mat-icon>person</mat-icon>
+        </div>
+        }
+        <mat-card-title class="title">
+          {{ candidate?.fullName || 'Applicant' }}
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="grid">
+          <div class="field">
+            <span class="label">City:</span>
+            <span class="value">{{ candidate?.city || '—' }}</span>
+          </div>
+          <div class="field">
+            <span class="label">Phone:</span>
+            <span class="value">{{ candidate?.phone || '—' }}</span>
+          </div>
+          <div class="field">
+            <span class="label">Age:</span>
+            <span class="value">{{ candidate?.age ?? '—' }}</span>
+          </div>
+          <div class="field">
+            <span class="label">Email:</span>
+            <span class="value">{{ candidate?.email || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <mat-icon>psychology</mat-icon>
+            About
+          </div>
+          <div class="kv">
+            <span class="k">Hobbies</span>
+            <span class="v">{{ candidate?.hobbies || '—' }}</span>
+          </div>
+          <div class="kv">
+            <span class="k">Why perfect?</span>
+            <span class="v">{{ candidate?.perfectCandidateReason || '—' }}</span>
+          </div>
+        </div>
+
+        @if (candidate?.profileImageUrl) {
+        <div class="image-wrap">
+          <img [src]="candidate.profileImageUrl"
+               alt="Profile image" />
+        </div>
+        }
+      </mat-card-content>
+
+      <mat-card-actions class="d-flex justify-content-between">
+        <button mat-button
+                (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Dashboard
+        </button>
+
+        <div class="d-flex"
+             style="gap:8px; align-items:center;">
+          <button mat-stroked-button
+                  (click)="goPrev()"
+                  [disabled]="!prevId"
+                  aria-label="Previous candidate">
+            <mat-icon>chevron_left</mat-icon>
+            Previous
+          </button>
+
+          @if (index >= 0) {
+          <div class="text-muted">
+            ({{ index + 1 }} / {{ total }})
+          </div>
+          }
+
+          <button mat-stroked-button
+                  (click)="goNext()"
+                  [disabled]="!nextId"
+                  aria-label="Next candidate">
+            Next
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+
+          <button mat-raised-button
+                  color="accent"
+                  (click)="editCandidate()">
+            <mat-icon>edit</mat-icon>
+            Edit Applicant
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+
+    } @else {
+    <mat-card class="candidate-card">
+      <mat-card-header>
+        <mat-card-title class="title">Applicant Not Found</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>The applicant you are looking for does not exist or an error occurred.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button
+                (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Dashboard
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+</div>

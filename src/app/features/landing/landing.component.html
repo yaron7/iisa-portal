@@ -1,0 +1,214 @@
+<div class="video-background">
+  <video autoplay
+         muted
+         loop
+         playsinline>
+    <source src="assets/videos/earth-from-space.mp4"
+            type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<div class="overlay"></div>
+
+<div class="content-container">
+
+  @if (submissionSuccess) {
+  <div class="thank-you-card">
+    <h2>APPLICATION RECEIVED</h2>
+    <mat-icon class="success-icon">check_circle</mat-icon>
+    <p>Thank you for your submission. We are one step closer to history.</p>
+
+    @if (canReEdit) {
+    <p class="re-edit-success-info">
+      You can edit your application until <strong>{{ reEditExpiresDate | date:'medium' }}</strong>.
+    </p>
+    <button mat-flat-button
+            color="accent"
+            (click)="editMySubmission()">
+      <mat-icon>edit</mat-icon> Edit My Application
+    </button>
+    }
+    <button mat-button
+            color="primary"
+            (click)="resetState()"
+            class="return-home-btn">
+      Return to Home
+    </button>
+  </div>
+
+  } @else if (canReEdit && !hideReEditCard) {
+  <div class="re-edit-card">
+    <mat-card>
+      <mat-card-header>
+        <mat-icon mat-card-avatar>history</mat-icon>
+        <mat-card-title>Welcome Back, Applicant!</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>You have an existing application in progress. You can edit it until:</p>
+        <p class="expiry-date">
+          {{ reEditExpiresDate | date:'fullDate' }} at {{ reEditExpiresDate | date:'shortTime' }}
+        </p>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button
+                (click)="beginApplication()">Start a New Application</button>
+        <button mat-flat-button
+                color="accent"
+                (click)="editMySubmission()">
+          <mat-icon>edit</mat-icon>
+          Edit My Application
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  } @else {
+
+  @if (formState === 'hidden') {
+  <div class="hero-section">
+    <h1>ISRAEL'S NEXT LEAP</h1>
+    <p>
+      The first Israeli public space flight is now open for registration. Start your journey to the stars.
+    </p>
+    <button mat-raised-button
+            color="primary"
+            class="cta-button"
+            (click)="beginApplication()">
+      BEGIN APPLICATION
+    </button>
+  </div>
+  }
+
+  @if (formState === 'visible') {
+  <div class="form-container"
+       [@formFade]="formState">
+    <h2>Application Portal</h2>
+
+    <mat-stepper orientation="vertical"
+                 linear
+                 #stepper>
+
+      <mat-step [stepControl]="personalInfoForm">
+        <form [formGroup]="personalInfoForm">
+          <ng-template matStepLabel>Your Personal Details</ng-template>
+
+          <mat-form-field>
+            <mat-label>Full Name</mat-label>
+            <input matInput
+                   normalizeFullName
+                   formControlName="fullName" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput
+                   type="email"
+                   formControlName="email" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Phone</mat-label>
+            <input matInput
+                   type="tel"
+                   formControlName="phone"
+                   placeholder="050-123-4567" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Age</mat-label>
+            <input matInput
+                   type="number"
+                   formControlName="age" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>City or region</mat-label>
+            <input matInput
+                   formControlName="city"
+                   placeholder="Start typing a city"
+                   appPlacesAutocomplete
+                   [types]="['(cities)']"
+                   [country]="['il']"
+                   (placeSelected)="onCitySelected($event)" />
+          </mat-form-field>
+
+          <div>
+            <button mat-button
+                    matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="freeTextForm">
+        <form [formGroup]="freeTextForm">
+          <ng-template matStepLabel>Tell Us About You</ng-template>
+
+          <mat-form-field>
+            <mat-label>Hobbies</mat-label>
+            <textarea matInput
+                      formControlName="hobbies"
+                      rows="3"></textarea>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Why are you the perfect candidate?</mat-label>
+            <textarea matInput
+                      formControlName="perfectCandidateReason"
+                      rows="5"></textarea>
+          </mat-form-field>
+
+          <div>
+            <button mat-button
+                    matStepperPrevious>Back</button>
+            <button mat-button
+                    matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="imageForm">
+        <form [formGroup]="imageForm">
+          <ng-template matStepLabel>Upload Profile Image</ng-template>
+
+          <div class="d-flex justify-content-center">
+            <button mat-stroked-button
+                    type="button"
+                    (click)="fileInput.click()">
+              <mat-icon>upload</mat-icon>
+              Choose Image (JPEG/PNG)
+            </button>
+            <input #fileInput
+                   hidden
+                   type="file"
+                   accept="image/png, image/jpeg"
+                   (change)="onFileSelected($event)" />
+          </div>
+
+          @if (imagePreview) {
+          <div class="image-preview">
+            <img [src]="imagePreview"
+                 alt="Image Preview" />
+          </div>
+          }
+
+          <div class="mt-4">
+            <button mat-button
+                    matStepperPrevious>Back</button>
+            <button mat-raised-button
+                    color="primary"
+                    (click)="onSubmit()"
+                    [disabled]="isSubmitting">
+              @if (!isSubmitting) { <span>Submit Final Application</span> }
+              @else { <mat-progress-spinner diameter="20"
+                                    mode="indeterminate"></mat-progress-spinner> }
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+    </mat-stepper>
+  </div>
+  }
+  }
+</div>

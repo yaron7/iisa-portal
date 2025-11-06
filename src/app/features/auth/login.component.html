@@ -1,0 +1,50 @@
+<div class="login-container">
+  <mat-card class="login-card"
+            @cardFade>
+    <mat-card-header>
+      <mat-card-title>IISA Mission Control Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm"
+            (ngSubmit)="onLogin()">
+
+        <mat-form-field appearance="fill"
+                        appValidationErrors
+                        class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput
+                 type="email"
+                 formControlName="email"
+                 required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill"
+                        appValidationErrors
+                        class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput
+                 type="password"
+                 formControlName="password"
+                 required>
+        </mat-form-field>
+
+        @if (errorMessage) {
+        <mat-error class="general-error-message">
+          {{ errorMessage }}
+        </mat-error>
+        }
+
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                class="full-width login-button">
+          @if (!isLoading) {
+          Login
+          } @else {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

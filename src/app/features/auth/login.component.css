@@ -1,0 +1,97 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-position: center;
+  background-size: cover;
+  padding-top: 50px;
+  box-sizing: border-box;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 30px 40px;
+  background: rgba(15, 30, 60, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(65, 133, 244, 0.2);
+  box-shadow: 0 0 25px rgba(65, 133, 244, 0.15);
+}
+
+.login-card mat-card-header {
+  text-align: center;
+  margin-bottom: 25px;
+  display: block;
+}
+
+.login-card mat-card-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #a0c0ff;
+  text-shadow: 0 0 8px rgba(65, 133, 244, 0.7);
+  display: block;
+  text-align: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 15px;
+}
+
+.mat-mdc-form-field-appearance-fill .mat-mdc-form-field-flex {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.mat-mdc-form-field .mat-mdc-floating-label.mat-mdc-form-field-floating-label {
+  color: #88aaff !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-ripple,
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+  background-color: #4185f4 !important;
+}
+
+.mat-mdc-form-field.mat-form-field-invalid .mat-mdc-form-field-ripple,
+.mat-mdc-form-field.mat-form-field-invalid .mat-mdc-form-field-focus-overlay {
+  background-color: #ff6f6f !important;
+}
+
+.login-button {
+  margin-top: 30px;
+  height: 50px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background-color: #4185f4;
+  color: #ffffff;
+  transition: box-shadow 0.3s ease;
+}
+
+.general-error-message {
+  color: #ff6f6f;
+  font-size: 14px;
+  margin-top: 15px;
+  text-align: center;
+  display: block;
+}
+
+mat-error {
+  color: #ff6f6f !important;
+  font-size: 13px !important;
+}
+
+mat-progress-bar {
+  height: 8px !important;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.mat-mdc-progress-bar .mat-mdc-progress-bar-fill::after {
+  background-color: #ffffff !important;
+}

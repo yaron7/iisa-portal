@@ -1,0 +1,178 @@
+<mat-toolbar color="primary"
+             class="topbar"
+             role="banner">
+  <span class="toolbar-title">Dashboard</span>
+
+  <button mat-button
+          class="logout-btn"
+          (click)="logout()"
+          aria-label="Log out">
+    <mat-icon>logout</mat-icon>
+    <span class="logout-text">Log out</span>
+  </button>
+</mat-toolbar>
+
+@if (isLoadingData) {
+<div class="loading-state">
+  <mat-spinner diameter="50"></mat-spinner>
+  <p>Loading Mission Data...</p>
+</div>
+} @else {
+
+<div class="container">
+
+  <mat-tab-group class="dash-tabs"
+                 animationDuration="200ms"
+                 [(selectedIndex)]="activeTabIndex"
+                 (selectedIndexChange)="onTabChange($event)">
+    <!-- ANALYTICS -->
+    <mat-tab label="Analytics">
+
+      <div class="grid grid-summary">
+        <!-- Total Applicants -->
+        <mat-card class="kpi-card">
+          <mat-card-title>Total Applicants</mat-card-title>
+          <div class="kpi-number">{{ candidates.length }}</div>
+        </mat-card>
+
+        <!-- Visits -->
+        <mat-card class="kpi-card">
+          <mat-card-title>Total Visits</mat-card-title>
+          <div class="kpi-number">
+            {{ (conversionData[0]?.value || 0) | number }}
+          </div>
+        </mat-card>
+
+        <!-- Registrations -->
+        <mat-card class="kpi-card">
+          <mat-card-title>Total Registrations</mat-card-title>
+          <div class="kpi-number">
+            {{ (conversionData[1]?.value || 0) | number }}
+          </div>
+        </mat-card>
+
+        <!-- Conversion Rate -->
+        <mat-card class="kpi-card">
+          <mat-card-title>Conversion Rate</mat-card-title>
+          <div class="kpi-number">
+            {{
+            (conversionData[1]?.value || 0) / Math.max((conversionData[0]?.value || 0), 1)
+            | percent:'1.0-1'
+            }}
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="grid grid-analytics">
+        <!-- Age Breakdown -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Age Breakdown</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="chart-box">
+            <ngx-charts-pie-chart [results]="ageBreakdownData"
+                                  [scheme]="colorScheme"
+                                  [labels]="true"
+                                  [doughnut]="true"
+                                  [arcWidth]="0.23"
+                                  [legend]="false"
+                                  [animations]="true">
+            </ngx-charts-pie-chart>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Top Cities -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Top Cities</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="chart-box">
+            <ngx-charts-bar-vertical [results]="cityDistributionData"
+                                     [scheme]="colorScheme"
+                                     [xAxis]="true"
+                                     [yAxis]="true"
+                                     [legend]="false"
+                                     [roundDomains]="true"
+                                     [showDataLabel]="true"
+                                     [animations]="true">
+            </ngx-charts-bar-vertical>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Visits vs Registrations -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Visits vs Registrations</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="chart-box">
+            <ngx-charts-bar-vertical [results]="conversionData"
+                                     [scheme]="colorScheme"
+                                     [xAxis]="true"
+                                     [yAxis]="true"
+                                     [legend]="false"
+                                     [roundDomains]="true"
+                                     [animations]="true"
+                                     [showDataLabel]="true"
+                                     [barPadding]="12">
+            </ngx-charts-bar-vertical>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+
+    <!-- CANDIDATES -->
+    <mat-tab label="Candidates">
+      <div class="candidates-grid">
+
+        <div class="candidate-list">
+          <div class="list-header">
+            <h2>Live Candidate List</h2>
+            <button mat-raised-button
+                    color="primary"
+                    (click)="onAddCandidate()">
+              <mat-icon>add</mat-icon>
+              Add New Candidate
+            </button>
+          </div>
+
+          @if (candidates.length === 0) {
+          <mat-card class="empty-state-card">
+            <mat-card-title>No Candidates Found</mat-card-title>
+            <mat-card-content>
+              <p>No candidate submissions were found.</p>
+            </mat-card-content>
+          </mat-card>
+          } @else {
+          <app-candidates-list [candidates]="candidates"
+                               (viewCandidate)="onViewCandidate($event)"
+                               (editCandidate)="onEditCandidate($event)"
+                               (deleteCandidate)="onDeleteCandidate($event)"
+                               (focusCandidate)="onFocusCandidate($event)">
+          </app-candidates-list>
+          }
+        </div>
+
+        <!-- Map -->
+        <mat-card class="map-box">
+          <mat-card-header>
+            <mat-card-title>Candidate Locations</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="map-box">
+            <google-map [center]="mapCenter"
+                        [zoom]="mapZoom"
+                        [width]="'100%'">
+              @for (position of markerPositions; track $index) {
+              <map-marker [position]="position"
+                          [options]="markerOptions"></map-marker>
+              }
+            </google-map>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
+</div>
+}

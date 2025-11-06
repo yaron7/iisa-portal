@@ -1,0 +1,251 @@
+:host {
+  display: block;
+}
+
+/* Toolbar layout */
+.topbar {
+  background: #0a1124;
+  color: #e6f1ff;
+  border-bottom: 1px solid rgba(0, 157, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 1.5rem;
+  font-family: "Orbitron", sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 0 8px rgba(0, 150, 255, 0.15);
+}
+
+/* Orbitron title */
+.toolbar-title {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  color: #e6f1ff;
+}
+
+/* Logout button */
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: none;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #e6f1ff;
+  transition: opacity 0.2s ease;
+}
+
+.logout-btn:hover {
+  opacity: 0.85;
+}
+
+.logout-btn .mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #e6f1ff;
+}
+
+/* ---------- General Container ---------- */
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 16px 0 32px;
+}
+
+/* ---------- Cards ---------- */
+mat-card {
+  background: rgba(15, 30, 60, 0.95);
+  border: 1px solid rgba(65, 133, 244, 0.3);
+  border-radius: 14px;
+  color: #e0f2f7;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+mat-card-title {
+  font-family: "Orbitron", sans-serif;
+  color: #a0c0ff;
+  font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Tabs ---------- */
+:host ::ng-deep .dash-tabs .mat-mdc-tab .mdc-tab__text-label {
+  color: #a0c0ff;
+}
+:host ::ng-deep .dash-tabs .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #e8f0ff !important;
+  text-shadow: 0 0 10px rgba(106, 164, 255, 0.7);
+}
+:host ::ng-deep .dash-tabs .mdc-tab-indicator__content--underline {
+  border-color: #4da6ff !important;
+  border-width: 3px !important;
+  box-shadow: 0 0 12px 2px rgba(77, 166, 255, 0.8);
+}
+
+/* ---------- KPI Summary ---------- */
+.grid-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin: 48px auto 0;
+  max-width: 1200px;
+}
+
+.kpi-card {
+  background: rgba(15, 30, 60, 0.95);
+  border: 1px solid rgba(65, 133, 244, 0.3);
+  border-radius: 14px;
+  text-align: center;
+  padding: 20px 0;
+  transition: 0.25s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+.kpi-number {
+  font-size: 3rem;
+  color: #6aa4ff;
+  text-shadow: 0 0 10px rgba(106, 164, 255, 0.35);
+}
+
+/* ---------- Analytics Grid ---------- */
+.grid-analytics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  margin-top: 32px;
+}
+.grid-analytics > * {
+  min-width: 0;
+}
+.grid-analytics mat-card {
+  width: 100%;
+  margin: 0;
+}
+
+/* ---------- Chart Containers ---------- */
+.chart-box,
+.map-box {
+  width: 100%;
+  height: 360px;
+  padding: 0;
+}
+.chart-box ngx-charts-pie-chart,
+.chart-box ngx-charts-bar-vertical {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------- Chart Colors ---------- */
+::ng-deep ngx-charts text,
+:host ::ng-deep .ngx-charts text,
+:host ::ng-deep .ngx-charts .tick text,
+:host ::ng-deep .ngx-charts .legend-label-text,
+:host ::ng-deep .ngx-charts .label,
+:host ::ng-deep .ngx-charts .data-label,
+:host ::ng-deep .ngx-charts .pie-label {
+  fill: #e0f2ff !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+:host ::ng-deep ngx-charts .axis path.domain,
+:host ::ng-deep ngx-charts .tick line {
+  stroke: rgba(160, 192, 255, 0.25) !important;
+}
+:host ::ng-deep ngx-charts .axis text {
+  fill: #b9ccff !important;
+  font-weight: 500 !important;
+}
+
+/* ---------- Map ---------- */
+google-map {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(80, 150, 255, 0.2);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Candidates Layout ---------- */
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(420px, 1fr));
+  gap: 24px;
+  align-items: start;
+  margin-top: 32px;
+}
+.candidates-grid > * {
+  min-width: 0;
+}
+.candidates-grid .map-box {
+  height: 500px;
+}
+
+/* Header layout for button placement */
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.list-header h2 {
+  margin: 0;
+  flex: 1 1 auto;
+}
+.list-header button[mat-raised-button] {
+  margin-left: auto;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .grid-analytics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .grid-summary {
+    grid-template-columns: 1fr;
+  }
+  .grid-analytics {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .chart-box,
+  .map-box {
+    height: 280px;
+  }
+  .kpi-number {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .candidates-grid {
+    grid-template-columns: 1fr;
+  }
+  .candidates-grid .map-box {
+    height: 360px;
+  }
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .list-header button[mat-raised-button] {
+    margin-left: 0;
+  }
+}

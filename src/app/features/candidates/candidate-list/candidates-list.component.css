@@ -1,0 +1,135 @@
+/* Container for the table and paginator */
+.table-container {
+  margin-top: 1rem;
+  background-color: #0d1a33; /* Matches dashboard background */
+  border-radius: 8px;
+  overflow: hidden; /* Ensures border-radius is applied to children */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Base table styling */
+.mat-mdc-table {
+  width: 100%;
+  box-shadow: none; /* Remove default shadow */
+  background: rgba(15, 30, 60, 0.7); /* Slightly transparent dark blue */
+  border-radius: 8px; /* Should already be handled by container, but good to have */
+}
+
+/* Ensure ALL text inside the table and paginator is visible */
+.mat-mdc-table,
+.mat-mdc-table .mat-mdc-header-cell,
+.mat-mdc-table .mat-mdc-cell,
+.mat-mdc-paginator {
+  color: #e0f2f7; /* Light text color for readability on dark background */
+}
+
+/* Header specific styling */
+.mat-mdc-header-cell {
+  background-color: rgba(65, 133, 244, 0.2); /* Subtle blue tint for header */
+  color: #a0c0ff; /* Brighter, distinct text for headers */
+  font-weight: bold;
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  padding: 12px 16px; /* Adjust padding */
+}
+
+/* Cell specific styling */
+.mat-mdc-cell {
+  padding: 8px 16px; /* Adjust padding */
+}
+
+/* Row hover effect */
+.mat-mdc-row:hover {
+  background-color: rgba(65, 133, 244, 0.1); /* Subtle hover effect */
+  cursor: pointer;
+}
+
+/* Profile image styling */
+.profile-image-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  vertical-align: middle;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.no-image-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  margin-right: 10px;
+  vertical-align: middle;
+  font-size: 1.5em;
+}
+
+/* Actions column buttons */
+.action-buttons button {
+  color: #a0c0ff; /* Icon color */
+  transition: color 0.2s ease-in-out;
+}
+
+.action-buttons button:hover {
+  color: #4185f4; /* Hover color */
+  background-color: transparent; /* Remove default button hover background */
+}
+
+/* Paginator styling */
+.mat-mdc-paginator {
+  background: rgba(15, 30, 60, 0.9); /* Slightly darker for distinction */
+  border-top: 1px solid rgba(65, 133, 244, 0.2);
+  color: #e0f2f7; /* Ensure text is visible */
+  padding: 8px 16px; /* Adjust padding */
+}
+
+/* Adjust dropdown text and arrow colors for paginator */
+.mat-mdc-paginator .mat-mdc-select-value {
+  color: #e0f2f7;
+}
+.mat-mdc-paginator .mat-mdc-select-arrow {
+  color: #e0f2f7;
+}
+
+/* Adjust dropdown panel styling */
+.mat-mdc-select-panel {
+  background: rgba(15, 30, 60, 0.9); /* Dropdown background */
+  color: #e0f2f7; /* Dropdown text color */
+}
+.mat-mdc-option {
+  color: #e0f2f7;
+}
+.mat-mdc-option.mat-mdc-option-active {
+  background-color: rgba(
+    65,
+    133,
+    244,
+    0.1
+  ); /* Hover color for dropdown options */
+}
+.mat-mdc-option.mat-mdc-option-selected:not(.mat-mdc-option-multiple) {
+  background-color: rgba(65, 133, 244, 0.2); /* Selected option color */
+  color: #a0c0ff;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+
+/* For small screens */
+@media (max-width: 768px) {
+  .mat-mdc-table {
+    display: block;
+    overflow-x: auto;
+  }
+  .mat-mdc-header-row,
+  .mat-mdc-row {
+    min-width: 600px; /* Ensure table content doesn't collapse too much */
+  }
+}

@@ -1,0 +1,139 @@
+<div class="page">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        @if (isEditMode) { Edit Candidate } @else { New Candidate }
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (isEditMode && !canEdit) {
+      <div class="alert-lock"
+           role="alert"
+           aria-live="polite">
+        <strong class="alert-lock__title">Editing Locked:</strong>
+        <span class="alert-lock__text">
+          The 3-day edit window has expired
+          @if (editUntil) {
+          <span>on {{ editUntil | date:'medium' }}.</span>
+          }
+          You can view this submission, but editing is disabled.
+        </span>
+      </div>
+      }
+      <form [formGroup]="candidateForm"
+            (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <mat-form-field appearance="fill">
+            <mat-label>Full Name</mat-label>
+            <input matInput
+                   normalizeFullName
+                   formControlName="fullName">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput
+                   formControlName="email"
+                   type="email">
+          </mat-form-field>
+
+          <div class="span-2 row-3">
+            <mat-form-field appearance="fill"
+                            class="col-span-2">
+              <mat-label>Phone</mat-label>
+              <input matInput
+                     formControlName="phone">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Age</mat-label>
+              <input matInput
+                     formControlName="age"
+                     type="number"
+                     min="18"
+                     max="99">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>City or region</mat-label>
+              <input matInput
+                     formControlName="city"
+                     appPlacesAutocomplete
+                     [types]="['(cities)']"
+                     [country]="['il']"
+                     (placeSelected)="onCitySelected($event)" />
+            </mat-form-field>
+          </div>
+
+          <div class="span-2 row-2">
+            <mat-form-field appearance="fill">
+              <mat-label>Hobbies</mat-label>
+              <textarea matInput
+                        formControlName="hobbies"
+                        rows="3"
+                        placeholder="Hobbies"></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Why I am the perfect candidate</mat-label>
+              <textarea matInput
+                        formControlName="perfectCandidateReason"
+                        rows="5"
+                        placeholder="Your answer"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="upload">
+          <div class="preview">
+            @if (imagePreview) {
+            <img [src]="imagePreview"
+                 alt="Profile preview">
+            } @else if (existingProfileImageUrl) {
+            <img [src]="existingProfileImageUrl"
+                 alt="Profile image">
+            } @else {
+            <mat-icon>person</mat-icon>
+            }
+          </div>
+
+          <div>
+            <button mat-raised-button
+                    color="accent"
+                    type="button"
+                    (click)="fileInput.click()">
+              <mat-icon>upload</mat-icon>
+              Upload Profile Image
+            </button>
+            <div>
+              <input #fileInput
+                     type="file"
+                     accept="image/png,image/jpeg"
+                     (change)="onFileSelected($event)"
+                     hidden>
+              <small>Accepted: JPG/PNG, up to 5MB</small>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-actions class="d-flex justify-content-between mt-4">
+          <button mat-button
+                  (click)="onCancel()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Dashboard
+          </button>
+
+          <button mat-raised-button
+                  color="accent"
+                  type="submit"
+                  [disabled]="candidateForm.invalid || isLoading || (isEditMode && !canEdit)">
+            <mat-icon>save</mat-icon>
+            Save
+          </button>
+
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,57 @@
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background: rgba(10, 20, 45, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  border-bottom: 1px solid rgba(65, 133, 244, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.app-logo {
+  height: 40px;
+  margin-right: 0.8rem;
+  filter: drop-shadow(0 0 5px rgba(65, 133, 244, 0.5));
+}
+
+.app-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #a0c0ff;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px rgba(65, 133, 244, 0.7);
+}
+
+.app-nav .nav-button {
+  color: #c0c0c0;
+  font-size: 0.95rem;
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+}
+
+.app-nav .nav-button:hover {
+  background-color: rgba(65, 133, 244, 0.2);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(65, 133, 244, 0.5);
+}
+
+.app-main-content {
+  padding-top: 70px;
+}
