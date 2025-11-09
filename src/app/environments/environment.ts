@@ -1,0 +1,13 @@
+export const environment = {
+  production: false,
+  firebaseConfig: {
+    apiKey: 'AIzaSyBo2EsHkUKhwwUDxVHtPmKSEeytD6AJ_pI',
+    authDomain: 'iisa-portal-a9f23.firebaseapp.com',
+    projectId: 'iisa-portal-a9f23',
+    storageBucket: 'iisa-portal-a9f23.firebasestorage.app',
+    messagingSenderId: '797148193901',
+    appId: '1:797148193901:web:8ba9dc46a8d890f0ea4b64',
+    measurementId: 'G-36WFGVKLN1',
+  },
+  googleMapsApiKey: 'AIzaSyDhyX_3ogyhHreC_O5du0j0F3NQy2bl9II',
+};
