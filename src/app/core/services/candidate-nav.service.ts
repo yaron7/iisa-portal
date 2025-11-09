@@ -11,7 +11,6 @@ export class CandidateNavService {
   private currentId$ = new BehaviorSubject<string | null>(null);
 
   setList(items: CandidateNavItem[]) {
-    // נשמור רק פריטים עם id תקין, ונוריד כפילויות
     const seen = new Set<string>();
     const cleaned = items.filter(
       (i) => i?.id && !seen.has(i.id) && seen.add(i.id)

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[appPlacesAutocomplete]',
+  selector: '[placesAutocomplete]',
   standalone: true,
 })
 export class PlacesAutocompleteDirective implements AfterViewInit, OnDestroy {

@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { MaterialModule } from '../../../shared/material.module';
 import { Candidate } from '../../../core/models/candidate.model';
 import { CandidateService } from '../../../core/services/candidate.service';
-import { MaterialModule } from '../../../shared/material.module';
 import { CandidateNavService } from '../../../core/services/candidate-nav.service';
 
 @Component({
@@ -38,7 +38,6 @@ export class CandidateDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // עדכון מזהה נוכחי וחישוב שכנים
     this.candidateNav.setCurrentId(this.id);
     this.candidateNav
       .neighbors$()
@@ -50,7 +49,6 @@ export class CandidateDetailsComponent implements OnInit, OnDestroy {
         this.total = total;
       });
 
-    // טעינת המועמד
     this.candidateService
       .getCandidateById(this.id)
       .pipe(takeUntil(this.destroy$))

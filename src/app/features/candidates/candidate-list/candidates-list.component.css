@@ -1,51 +1,66 @@
-/* Container for the table and paginator */
-.table-container {
-  margin-top: 1rem;
-  background-color: #0d1a33; /* Matches dashboard background */
-  border-radius: 8px;
-  overflow: hidden; /* Ensures border-radius is applied to children */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+:host {
+  display: block;
+  width: 100%;
 }
 
-/* Base table styling */
+/* ===== Container (card + paginator) ===== */
+.table-container,
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  background-color: #0d1a33;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  max-width: 100%;
+}
+
+/* ===== Base table ===== */
 .mat-mdc-table {
   width: 100%;
-  box-shadow: none; /* Remove default shadow */
-  background: rgba(15, 30, 60, 0.7); /* Slightly transparent dark blue */
-  border-radius: 8px; /* Should already be handled by container, but good to have */
+  min-width: 800px;
+  background: rgba(15, 30, 60, 0.78);
+  border-radius: 12px;
+  box-shadow: none;
+  table-layout: auto;
 }
 
-/* Ensure ALL text inside the table and paginator is visible */
+/* Text color everywhere (incl. paginator) */
 .mat-mdc-table,
 .mat-mdc-table .mat-mdc-header-cell,
 .mat-mdc-table .mat-mdc-cell,
 .mat-mdc-paginator {
-  color: #e0f2f7; /* Light text color for readability on dark background */
+  color: #e0f2f7;
 }
 
-/* Header specific styling */
+/* ===== Header ===== */
 .mat-mdc-header-cell {
-  background-color: rgba(65, 133, 244, 0.2); /* Subtle blue tint for header */
-  color: #a0c0ff; /* Brighter, distinct text for headers */
-  font-weight: bold;
+  background-color: rgba(65, 133, 244, 0.18) !important;
+  color: #a0c0ff;
+  font-weight: 700;
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
-  padding: 12px 16px; /* Adjust padding */
+  padding: 12px 14px;
+  white-space: nowrap;
 }
 
-/* Cell specific styling */
+/* ===== Cells ===== */
 .mat-mdc-cell {
-  padding: 8px 16px; /* Adjust padding */
+  padding: 10px 14px;
+  vertical-align: middle;
+  overflow: hidden; /* enable ellipsis */
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Row hover effect */
+/* Row hover */
 .mat-mdc-row:hover {
-  background-color: rgba(65, 133, 244, 0.1); /* Subtle hover effect */
+  background-color: rgba(65, 133, 244, 0.1);
   cursor: pointer;
 }
 
-/* Profile image styling */
-.profile-image-thumb {
+/* ===== Profile image ===== */
+.profile-thumbnail {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -63,73 +78,49 @@
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
   margin-right: 10px;
-  vertical-align: middle;
   font-size: 1.5em;
 }
 
-/* Actions column buttons */
-.action-buttons button {
-  color: #a0c0ff; /* Icon color */
+/* ===== Actions buttons ===== */
+.action-buttons button,
+.mat-mdc-cell button[mat-icon-button] {
+  color: #a0c0ff;
   transition: color 0.2s ease-in-out;
 }
-
-.action-buttons button:hover {
-  color: #4185f4; /* Hover color */
-  background-color: transparent; /* Remove default button hover background */
+.action-buttons button:hover,
+.mat-mdc-cell button[mat-icon-button]:hover {
+  color: #4185f4;
+  background: transparent;
 }
 
-/* Paginator styling */
+/* ===== Paginator ===== */
 .mat-mdc-paginator {
-  background: rgba(15, 30, 60, 0.9); /* Slightly darker for distinction */
-  border-top: 1px solid rgba(65, 133, 244, 0.2);
-  color: #e0f2f7; /* Ensure text is visible */
-  padding: 8px 16px; /* Adjust padding */
-}
-
-/* Adjust dropdown text and arrow colors for paginator */
-.mat-mdc-paginator .mat-mdc-select-value {
+  background: rgba(15, 30, 60, 0.92);
+  border-top: 1px solid rgba(65, 133, 244, 0.22);
   color: #e0f2f7;
+  padding: 8px 12px;
 }
+.mat-mdc-paginator .mat-mdc-select-value,
 .mat-mdc-paginator .mat-mdc-select-arrow {
   color: #e0f2f7;
 }
-
-/* Adjust dropdown panel styling */
 .mat-mdc-select-panel {
-  background: rgba(15, 30, 60, 0.9); /* Dropdown background */
-  color: #e0f2f7; /* Dropdown text color */
+  background: rgba(15, 30, 60, 0.92);
+  color: #e0f2f7;
 }
 .mat-mdc-option {
   color: #e0f2f7;
 }
 .mat-mdc-option.mat-mdc-option-active {
-  background-color: rgba(
-    65,
-    133,
-    244,
-    0.1
-  ); /* Hover color for dropdown options */
+  background: rgba(65, 133, 244, 0.12);
 }
 .mat-mdc-option.mat-mdc-option-selected:not(.mat-mdc-option-multiple) {
-  background-color: rgba(65, 133, 244, 0.2); /* Selected option color */
+  background: rgba(65, 133, 244, 0.2);
   color: #a0c0ff;
 }
 
 .clickable-row {
   cursor: pointer;
-}
-
-
-/* For small screens */
-@media (max-width: 768px) {
-  .mat-mdc-table {
-    display: block;
-    overflow-x: auto;
-  }
-  .mat-mdc-header-row,
-  .mat-mdc-row {
-    min-width: 600px; /* Ensure table content doesn't collapse too much */
-  }
 }

@@ -1,0 +1,46 @@
+.re-edit-card {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(15, 30, 60, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(65, 133, 244, 0.3);
+  box-shadow: 0 0 25px rgba(65, 133, 244, 0.15);
+  color: #e0f2f7;
+  padding: 0;
+  box-sizing: border-box;
+  margin-bottom: 2rem;
+}
+.re-edit-card mat-card-header {
+  border-bottom: 1px solid rgba(65, 133, 244, 0.2);
+}
+.re-edit-card mat-card-title {
+  color: #a0c0ff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.25rem;
+}
+
+.re-edit-card mat-card-content {
+  padding-top: 16px;
+}
+.re-edit-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+.re-edit-card .expiry-date {
+  font-weight: bold;
+  color: #f7e733;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.re-edit-card mat-card-actions {
+  padding: 0 16px 16px;
+}
+.re-edit-card mat-card-actions .mat-icon {
+  margin-right: 8px;
+}
+.re-edit-card button[color="accent"] {
+  background-color: #a0c0ff;
+  color: #212121;
+}

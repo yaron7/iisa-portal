@@ -6,11 +6,8 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
-  AbstractControl,
 } from '@angular/forms';
-import { CandidateService } from '../../core/services/candidate.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
-import { Candidate } from '../../core/models/candidate.model';
 import {
   trigger,
   state,
@@ -18,13 +15,17 @@ import {
   animate,
   transition,
 } from '@angular/animations';
-import { Subscription, Subject, switchMap, takeUntil, map } from 'rxjs';
+import { Subscription, Subject, switchMap, takeUntil } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { DocumentReference } from '@angular/fire/firestore';
 import { MaterialModule } from '../../shared/material.module';
 import { PlacesAutocompleteDirective } from '../../shared/directives/places-autocomplete.directive';
 import { fullNameValidator } from '../../core/validators/full-name.validator';
 import { NormalizeFullNameDirective } from '../../shared/directives/normalize-full-name.directive';
+import { CandidateService } from '../../core/services/candidate.service';
+import { Candidate } from '../../core/models/candidate.model';
+import { ThankYouCardComponent } from './thank-you-card/thank-you-card.component';
+import { ReEditCardComponent } from './re-edit-card/re-edit-card.component';
 
 const EDIT_WINDOW_DAYS = 3;
 
@@ -34,8 +35,9 @@ const EDIT_WINDOW_DAYS = 3;
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DatePipe,
     MaterialModule,
+    ThankYouCardComponent,
+    ReEditCardComponent,
     PlacesAutocompleteDirective,
     NormalizeFullNameDirective,
   ],
@@ -76,6 +78,12 @@ export class LandingComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   submissionSuccess = false;
   formState: 'hidden' | 'visible' = 'hidden';
+  personalFields = [
+    { name: 'fullName', label: 'Full Name', type: 'text' },
+    { name: 'email', label: 'Email', type: 'email' },
+    { name: 'phone', label: 'Phone', type: 'tel' },
+    { name: 'age', label: 'Age', type: 'number' },
+  ];
 
   // --- Re-editing Properties ---
   canReEdit: boolean = false;
@@ -109,7 +117,7 @@ export class LandingComponent implements OnInit, OnDestroy {
     });
 
     this.freeTextForm = this.fb.group({
-      hobbies: [''], // Hobbies are optional
+      hobbies: [''],
       perfectCandidateReason: [
         '',
         [Validators.required, Validators.maxLength(1000)],
@@ -119,32 +127,6 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.imageForm = this.fb.group({
       profileImage: [null, Validators.required],
     });
-  }
-
-  // --- Getters (no validation component) ---
-  get fullName(): AbstractControl | null {
-    return this.personalInfoForm.get('fullName');
-  }
-  get email(): AbstractControl | null {
-    return this.personalInfoForm.get('email');
-  }
-  get phone(): AbstractControl | null {
-    return this.personalInfoForm.get('phone');
-  }
-  get age(): AbstractControl | null {
-    return this.personalInfoForm.get('age');
-  }
-  get city(): AbstractControl | null {
-    return this.personalInfoForm.get('city');
-  }
-  get hobbies(): AbstractControl | null {
-    return this.freeTextForm.get('hobbies');
-  }
-  get perfectCandidateReason(): AbstractControl | null {
-    return this.freeTextForm.get('perfectCandidateReason');
-  }
-  get profileImage(): AbstractControl | null {
-    return this.imageForm.get('profileImage');
   }
 
   ngOnInit(): void {
@@ -256,26 +238,14 @@ export class LandingComponent implements OnInit, OnDestroy {
       .uploadProfileImage(this.selectedFile)
       .pipe(
         switchMap((imageUrl) => {
-          const formData = {
+          const { id, ...finalData } = {
             ...this.personalInfoForm.value,
             ...this.freeTextForm.value,
             profileImageUrl: imageUrl,
             registrationDate: new Date(),
             lastUpdated: new Date(),
-          };
+          } as Candidate;
 
-          const finalData: Omit<Candidate, 'id'> = {
-            fullName: formData.fullName,
-            email: formData.email,
-            phone: formData.phone,
-            age: formData.age,
-            city: formData.city,
-            hobbies: formData.hobbies,
-            perfectCandidateReason: formData.perfectCandidateReason,
-            profileImageUrl: formData.profileImageUrl,
-            registrationDate: formData.registrationDate,
-            lastUpdated: formData.lastUpdated,
-          };
           return this.candidateService.addCandidate(finalData);
         }),
         takeUntil(this.destroy$)
@@ -312,7 +282,9 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   editMySubmission(): void {
     if (this.reEditCandidateId) {
-      this.router.navigate(['/candidates/edit', this.reEditCandidateId]);
+      this.router.navigate(['/candidates/edit', this.reEditCandidateId], {
+        state: { source: 'landing', returnUrl: this.router.url },
+      });
     }
   }
 }

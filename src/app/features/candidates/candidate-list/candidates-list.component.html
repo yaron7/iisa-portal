@@ -19,9 +19,16 @@
             *matHeaderCellDef>Profile Image</th>
         <td mat-cell
             *matCellDef="let candidate">
+          @if (candidate?.profileImageUrl) {
           <img [src]="candidate.profileImageUrl"
                [alt]="candidate.fullName"
                class="profile-thumbnail">
+          } @else {
+          <div mat-card-avatar
+               class="no-image-placeholder">
+            <mat-icon>person</mat-icon>
+          </div>
+          }
         </td>
       </ng-container>
 

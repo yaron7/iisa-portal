@@ -59,7 +59,7 @@ To design and build a **public registration landing page** and a **recruitment m
 | ------------------------ | ------------------------------------ |
 | **Framework**            | Angular 19 (Standalone Components)   |
 | **Language**             | TypeScript                           |
-| **UI Library**           | Angular Material + TailwindCSS       |
+| **UI Library**           | Angular Material       |
 | **State / Live Updates** | RxJS Streams                         |
 | **Data Layer**           | LocalStorage / Firebase mock backend |
 | **Charts**               | ngx-charts                           |

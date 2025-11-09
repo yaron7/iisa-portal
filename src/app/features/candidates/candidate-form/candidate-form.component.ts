@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, Input } from '@angular/core';
+import { Component, OnInit, inject, Input, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -7,19 +7,40 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
-import { Subject, Observable, of } from 'rxjs';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
+import { Observable, of, EMPTY } from 'rxjs';
+import {
+  catchError,
+  finalize,
+  first,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 
-import { Candidate } from '../../../core/models/candidate.model';
-import { CandidateService } from '../../../core/services/candidate.service';
 import { MaterialModule } from '../../../shared/material.module';
 import { AnalyticsService } from '../../../core/services/analytics.service';
 import { PlacesAutocompleteDirective } from '../../../shared/directives/places-autocomplete.directive';
 import { fullNameValidator } from '../../../core/validators/full-name.validator';
 import { NormalizeFullNameDirective } from '../../../shared/directives/normalize-full-name.directive';
 
+import { CandidateService } from '../../../core/services/candidate.service';
+import { Candidate } from '../../../core/models/candidate.model';
+import { Timestamp } from 'firebase/firestore';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TrimInputDirective } from '../../../shared/directives/trim.directive';
+
 const EDIT_WINDOW_DAYS = 3;
+const DIFF_KEYS: (keyof Candidate)[] = [
+  'fullName',
+  'email',
+  'phone',
+  'age',
+  'city',
+  'hobbies',
+  'perfectCandidateReason',
+];
 
 @Component({
   selector: 'app-candidate-form',
@@ -30,11 +51,12 @@ const EDIT_WINDOW_DAYS = 3;
     MaterialModule,
     PlacesAutocompleteDirective,
     NormalizeFullNameDirective,
+    TrimInputDirective,
   ],
   templateUrl: './candidate-form.component.html',
   styleUrls: ['./candidate-form.component.css'],
 })
-export class CandidateFormComponent implements OnInit, OnDestroy {
+export class CandidateFormComponent implements OnInit {
   @Input() id: string | null = null;
 
   candidateForm!: FormGroup;
@@ -52,10 +74,26 @@ export class CandidateFormComponent implements OnInit, OnDestroy {
   private analyticsService = inject(AnalyticsService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private destroy$ = new Subject<void>();
+  private location = inject(Location);
+  private readonly destroyRef = inject(DestroyRef);
+
   private originalCandidate: Candidate | null = null;
   private allowedFileFormat = ['image/png', 'image/jpeg', 'image/jpg'];
   private maxFileSize = 5 * 1024 * 1024;
+  private originalSnapshot!: Readonly<Partial<Candidate>>;
+
+  get hasChanges(): boolean {
+    if (!this.isEditMode) return true;
+    if (!this.originalSnapshot) return true;
+    if (this.imageFile) return true;
+
+    const curr = this.snapshot();
+    for (const k of DIFF_KEYS) {
+      if ((curr as any)?.[k] !== (this.originalSnapshot as any)?.[k])
+        return true;
+    }
+    return false;
+  }
 
   ngOnInit(): void {
     this.isEditMode = !!this.id;
@@ -63,50 +101,48 @@ export class CandidateFormComponent implements OnInit, OnDestroy {
 
     if (this.isEditMode && this.id) {
       this.isLoading = true;
+
       this.candidateService
         .getCandidateById(this.id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (candidate) => {
-            if (candidate) {
-              this.originalCandidate = candidate;
-              this.candidateForm.patchValue(candidate);
-              this.existingProfileImageUrl = candidate.profileImageUrl || null;
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          first(),
+          tap((candidate) => {
+            if (!candidate) throw new Error('not-found');
 
-              const reg = candidate.registrationDate
-                ? new Date(candidate.registrationDate as any)
-                : null;
+            this.originalCandidate = candidate;
+            this.candidateForm.patchValue(candidate);
+            this.existingProfileImageUrl = candidate.profileImageUrl || null;
+            this.originalSnapshot = Object.freeze(this.snapshot());
 
-              if (reg) {
-                const until = new Date(reg);
-                until.setDate(until.getDate() + EDIT_WINDOW_DAYS);
-                this.editUntil = until;
-                this.canEdit = new Date() <= until;
-                if (!this.canEdit) this.candidateForm.disable();
-              } else {
-                this.canEdit = true;
-              }
+            const reg = candidate.registrationDate ?? null;
+            const regMillis = this.toMillisSafe(reg);
+            if (regMillis) {
+              const until = new Date(regMillis);
+              until.setDate(until.getDate() + EDIT_WINDOW_DAYS);
+              this.editUntil = until;
+              this.canEdit = Date.now() <= until.getTime();
+              if (!this.canEdit)
+                this.candidateForm.disable({ emitEvent: false });
             } else {
-              this.router.navigate(['/dashboard']);
+              this.canEdit = true;
             }
+          }),
+          catchError(() => {
+            this.location.back();
+            return EMPTY;
+          }),
+          finalize(() => {
             this.isLoading = false;
-          },
-          error: () => {
-            this.isLoading = false;
-            this.router.navigate(['/dashboard']);
-          },
-        });
+          })
+        )
+        .subscribe();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   private initForm(): void {
     this.candidateForm = this.fb.group({
-      fullName: ['', Validators.required, fullNameValidator],
+      fullName: ['', [Validators.required, fullNameValidator]],
       email: ['', [Validators.required, Validators.email]],
       phone: [
         '',
@@ -124,6 +160,42 @@ export class CandidateFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  private normStr(v: unknown): string {
+    return (typeof v === 'string' ? v.trim() : '') || '';
+  }
+
+  private toMillisSafe(v: unknown): number | null {
+    if (!v) return null;
+    if (v instanceof Date) return v.getTime();
+    if (v instanceof Timestamp) return v.toMillis();
+    if (typeof v === 'number') return v;
+    const d = new Date(v as any);
+    return isNaN(d.getTime()) ? null : d.getTime();
+  }
+
+  private snapshot(): Partial<Candidate> {
+    const raw = this.candidateForm.getRawValue() as Partial<Candidate>;
+    return {
+      fullName: this.normStr(raw.fullName),
+      email: this.normStr(raw.email),
+      phone: this.normStr(raw.phone),
+      age: raw.age,
+      city: this.normStr(raw.city),
+      hobbies: this.normStr(raw.hobbies),
+      perfectCandidateReason: this.normStr(raw.perfectCandidateReason),
+    };
+  }
+
+  private buildDiff(current: Partial<Candidate>): Partial<Candidate> {
+    const diff: Partial<Candidate> = {};
+    for (const k of DIFF_KEYS) {
+      const currVal = (current as any)?.[k];
+      const origVal = (this.originalSnapshot as any)?.[k];
+      if (currVal !== origVal) (diff as any)[k] = currVal;
+    }
+    return diff;
+  }
+
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0] || null;
     if (!file) return;
@@ -137,6 +209,11 @@ export class CandidateFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    if (this.candidateForm.invalid) {
+      this.candidateForm.markAllAsTouched();
+      return;
+    }
+
     if (this.isEditMode && !this.canEdit) {
       alert(
         `The 3-day edit window expired${
@@ -146,8 +223,7 @@ export class CandidateFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.candidateForm.invalid) {
-      this.candidateForm.markAllAsTouched();
+    if (this.isEditMode && !this.hasChanges) {
       return;
     }
 
@@ -162,42 +238,51 @@ export class CandidateFormComponent implements OnInit, OnDestroy {
     fileUpload$
       .pipe(
         switchMap((imageUrl) => {
-          const formValues = this.candidateForm.value;
           const now = new Date();
 
-          const candidateData: Candidate = {
-            ...this.originalCandidate,
-            ...formValues,
-            profileImageUrl: imageUrl || '',
-            lastUpdated: now,
-            registrationDate: this.isEditMode
-              ? this.originalCandidate?.registrationDate
-              : now,
-          };
-
           if (this.isEditMode && this.id) {
-            const { id, ...updateData } = candidateData as any;
-            return this.candidateService.updateCandidate(this.id, updateData);
-          } else {
-            const { id, ...addData } = candidateData as any;
-            return this.candidateService.addCandidate(addData);
+            const curr = this.snapshot();
+            const diff = this.buildDiff(curr);
+            if (imageUrl) diff.profileImageUrl = imageUrl;
+            diff.lastUpdated = now;
+
+            if (Object.keys(diff).length === 0) return EMPTY;
+            return this.candidateService.updateCandidate(this.id, diff);
           }
+
+          const v = this.candidateForm.value as Partial<Candidate>;
+          const addData: Candidate = {
+            fullName: this.normStr(v.fullName),
+            email: this.normStr(v.email),
+            phone: this.normStr(v.phone),
+            age: v.age as number,
+            city: this.normStr(v.city),
+            hobbies: this.normStr(v.hobbies),
+            perfectCandidateReason: this.normStr(v.perfectCandidateReason),
+            profileImageUrl: imageUrl ?? this.existingProfileImageUrl ?? '',
+            registrationDate: now,
+            lastUpdated: now,
+          } as Candidate;
+
+          return this.candidateService.addCandidate(addData);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        catchError(() => {
+          this.location.back();
+          return EMPTY;
+        })
       )
       .subscribe({
-        next: (res) => {
-          // Increment analytics only on initial registration
+        next: () => {
           if (!this.isEditMode) {
             try {
               this.analyticsService.incrementRegistrations();
             } catch {}
           }
-          this.isLoading = false;
-          this.router.navigate(['/dashboard']);
-        },
-        error: () => {
-          this.isLoading = false;
+          this.location.back();
         },
       });
   }
@@ -217,10 +302,10 @@ export class CandidateFormComponent implements OnInit, OnDestroy {
 
   onCancel(): void {
     const lastTab = sessionStorage.getItem('iisa_dashboard_active_tab');
-    this.router.navigate(['/dashboard']).then(() => {
-      if (lastTab) {
-        sessionStorage.setItem('iisa_dashboard_active_tab', lastTab);
-      }
-    });
+    if (lastTab) {
+      sessionStorage.setItem('iisa_dashboard_active_tab', lastTab);
+    }
+
+    this.location.back();
   }
 }

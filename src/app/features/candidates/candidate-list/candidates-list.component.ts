@@ -16,7 +16,6 @@ import { MaterialModule } from '../../../shared/material.module';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-
 import { Candidate } from '../../../core/models/candidate.model';
 
 @Component({

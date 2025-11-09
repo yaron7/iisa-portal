@@ -4,18 +4,18 @@ import { Observable, Subject, forkJoin } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { Router, RouterModule } from '@angular/router';
 
-import { CandidateService } from '../../core/services/candidate.service';
-import { Candidate } from '../../core/models/candidate.model';
-
 import { GoogleMap, MapMarker } from '@angular/google-maps';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 
 import { CandidatesListComponent } from '../candidates/candidate-list/candidates-list.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { GeocodingService } from '../../core/services/geocoding.service';
-import { CandidateNavService } from '../../core/services/candidate-nav.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { MaterialModule } from '../../shared/material.module';
+
+import { Candidate } from '../../core/models/candidate.model';
+import { CandidateService } from '../../core/services/candidate.service';
+import { CandidateNavService } from '../../core/services/candidate-nav.service';
 
 @Component({
   selector: 'iisa-dashboard',
@@ -225,11 +225,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onEditCandidate(candidateId: string): void {
-    this.router.navigate(['/candidates/edit', candidateId]);
+    this.router.navigate(['/candidates/edit', candidateId], {
+      state: { source: 'dashboard', returnUrl: this.router.url },
+    });
   }
 
   onAddCandidate(): void {
-    this.router.navigate(['/candidates/add']);
+    this.router.navigate(['/candidates/add'], {
+      state: { source: 'dashboard', returnUrl: this.router.url },
+    });
   }
 
   onDeleteCandidate(candidateId: string): void {
@@ -259,11 +263,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           const gmap = this.googleMap?.googleMap;
           if (gmap) {
             gmap.panTo(coords);
-            gmap.setZoom(11); 
+            gmap.setZoom(11);
           }
         },
-        error: () => {
-        },
+        error: () => {},
       });
   }
 }

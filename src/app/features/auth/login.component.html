@@ -37,7 +37,8 @@
         <button mat-raised-button
                 color="primary"
                 type="submit"
-                class="full-width login-button">
+                class="full-width login-button"
+                [disabled]="loginForm.invalid">
           @if (!isLoading) {
           Login
           } @else {

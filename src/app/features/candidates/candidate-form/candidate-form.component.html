@@ -28,12 +28,14 @@
             <mat-label>Full Name</mat-label>
             <input matInput
                    normalizeFullName
+                   trimInput
                    formControlName="fullName">
           </mat-form-field>
 
           <mat-form-field appearance="fill">
             <mat-label>Email</mat-label>
             <input matInput
+                   trimInput
                    formControlName="email"
                    type="email">
           </mat-form-field>
@@ -43,6 +45,7 @@
                             class="col-span-2">
               <mat-label>Phone</mat-label>
               <input matInput
+                     trimInput
                      formControlName="phone">
             </mat-form-field>
 
@@ -59,7 +62,7 @@
               <mat-label>City or region</mat-label>
               <input matInput
                      formControlName="city"
-                     appPlacesAutocomplete
+                     placesAutocomplete
                      [types]="['(cities)']"
                      [country]="['il']"
                      (placeSelected)="onCitySelected($event)" />
@@ -121,13 +124,13 @@
           <button mat-button
                   (click)="onCancel()">
             <mat-icon>arrow_back</mat-icon>
-            Back to Dashboard
+            Back
           </button>
 
           <button mat-raised-button
                   color="accent"
                   type="submit"
-                  [disabled]="candidateForm.invalid || isLoading || (isEditMode && !canEdit)">
+                  [disabled]="candidateForm.invalid || isLoading || (isEditMode && (!canEdit || !hasChanges))">
             <mat-icon>save</mat-icon>
             Save
           </button>

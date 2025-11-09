@@ -1,4 +1,4 @@
-<div class="video-background">
+<!-- <div class="video-background">
   <video autoplay
          muted
          loop
@@ -7,61 +7,22 @@
             type="video/mp4" />
     Your browser does not support the video tag.
   </video>
-</div>
+</div> -->
 
 <div class="overlay"></div>
 
 <div class="content-container">
 
   @if (submissionSuccess) {
-  <div class="thank-you-card">
-    <h2>APPLICATION RECEIVED</h2>
-    <mat-icon class="success-icon">check_circle</mat-icon>
-    <p>Thank you for your submission. We are one step closer to history.</p>
-
-    @if (canReEdit) {
-    <p class="re-edit-success-info">
-      You can edit your application until <strong>{{ reEditExpiresDate | date:'medium' }}</strong>.
-    </p>
-    <button mat-flat-button
-            color="accent"
-            (click)="editMySubmission()">
-      <mat-icon>edit</mat-icon> Edit My Application
-    </button>
-    }
-    <button mat-button
-            color="primary"
-            (click)="resetState()"
-            class="return-home-btn">
-      Return to Home
-    </button>
-  </div>
+  <app-thank-you-card [canReEdit]="canReEdit"
+                      [reEditExpiresDate]="reEditExpiresDate"
+                      (editMySubmission)="editMySubmission()"
+                      (returnHome)="resetState()" />
 
   } @else if (canReEdit && !hideReEditCard) {
-  <div class="re-edit-card">
-    <mat-card>
-      <mat-card-header>
-        <mat-icon mat-card-avatar>history</mat-icon>
-        <mat-card-title>Welcome Back, Applicant!</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p>You have an existing application in progress. You can edit it until:</p>
-        <p class="expiry-date">
-          {{ reEditExpiresDate | date:'fullDate' }} at {{ reEditExpiresDate | date:'shortTime' }}
-        </p>
-      </mat-card-content>
-      <mat-card-actions align="end">
-        <button mat-button
-                (click)="beginApplication()">Start a New Application</button>
-        <button mat-flat-button
-                color="accent"
-                (click)="editMySubmission()">
-          <mat-icon>edit</mat-icon>
-          Edit My Application
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+  <app-re-edit-card [reEditExpiresDate]="reEditExpiresDate"
+                    (beginApplication)="beginApplication()"
+                    (editMySubmission)="editMySubmission()" />
 
   } @else {
 
@@ -93,41 +54,28 @@
         <form [formGroup]="personalInfoForm">
           <ng-template matStepLabel>Your Personal Details</ng-template>
 
+          @for (field of personalFields; track field.name) {
           <mat-form-field>
-            <mat-label>Full Name</mat-label>
+            <mat-label>{{ field.label }}</mat-label>
+            @if (field.name === 'fullName') {
             <input matInput
                    normalizeFullName
-                   formControlName="fullName" />
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Email</mat-label>
+                   [type]="field.type"
+                   [formControlName]="field.name" />
+            } @else {
             <input matInput
-                   type="email"
-                   formControlName="email" />
+                   [type]="field.type"
+                   [formControlName]="field.name" />
+            }
           </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Phone</mat-label>
-            <input matInput
-                   type="tel"
-                   formControlName="phone"
-                   placeholder="050-123-4567" />
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Age</mat-label>
-            <input matInput
-                   type="number"
-                   formControlName="age" />
-          </mat-form-field>
+          }
 
           <mat-form-field>
             <mat-label>City or region</mat-label>
             <input matInput
                    formControlName="city"
                    placeholder="Start typing a city"
-                   appPlacesAutocomplete
+                   placesAutocomplete
                    [types]="['(cities)']"
                    [country]="['il']"
                    (placeSelected)="onCitySelected($event)" />

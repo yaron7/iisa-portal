@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore';
 export interface Candidate {
   id?: string;
   fullName: string;
@@ -8,6 +9,6 @@ export interface Candidate {
   perfectCandidateReason: string;
   profileImageUrl: string;
   hobbies?: string;
-  registrationDate?: Date | string;
-  lastUpdated?: Date | string;
+  registrationDate?: Timestamp | Date;
+  lastUpdated?: Timestamp | Date;
 }

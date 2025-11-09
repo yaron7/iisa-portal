@@ -1,4 +1,4 @@
-.video-background {
+/* .video-background {
   position: fixed;
   top: 0;
   left: 0;
@@ -23,7 +23,7 @@
   height: 100vh;
   background-color: rgba(0, 5, 20, 0.8);
   z-index: -1;
-}
+} */
 
 /* --- 2. Main Content Container --- */
 .content-container {
@@ -171,114 +171,6 @@ button[mat-raised-button].cta-button:hover {
   border-radius: 10px;
   border: 2px solid rgba(80, 150, 255, 0.5);
   box-shadow: 0 0 15px rgba(80, 150, 255, 0.3);
-}
-
-/* --- 5. Thank You Card Styling --- */
-.thank-you-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-  background: rgba(15, 30, 60, 0.95);
-  backdrop-filter: blur(15px);
-  border-radius: 16px;
-  padding: 3.5rem;
-  border: 1px solid rgba(80, 150, 255, 0.3);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-.thank-you-card h2 {
-  font-family: "Orbitron", sans-serif;
-  font-size: 2.5rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  color: #aaffaa;
-  text-shadow: 0 0 10px rgba(170, 255, 170, 0.7);
-}
-
-.thank-you-card p {
-  font-family: "Montserrat", sans-serif;
-  font-size: 1.1rem;
-  color: #c0c0c0;
-  line-height: 1.6;
-}
-
-.success-icon {
-  font-size: 80px;
-  width: 80px;
-  height: 80px;
-  color: #aaffaa;
-  margin: 2rem 0;
-  filter: drop-shadow(0 0 10px rgba(170, 255, 170, 0.7));
-}
-
-/* --- Re-edit info on success page --- */
-.thank-you-card .re-edit-success-info {
-  font-size: 1.1em;
-  color: #a0c0ff;
-  border-top: 1px solid rgba(65, 133, 244, 0.2);
-  border-bottom: 1px solid rgba(65, 133, 244, 0.2);
-  padding: 1rem 0;
-  margin: 1.5rem 0;
-}
-.thank-you-card .re-edit-success-info strong {
-  color: #f7e733;
-  font-weight: bold;
-}
-.thank-you-card .return-home-btn {
-  margin-left: 1rem;
-  color: #a0c0ff;
-}
-
-/* --- Re-Edit Card Styles --- */
-.re-edit-card {
-  width: 100%;
-  max-width: 500px;
-  background: rgba(15, 30, 60, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  border: 1px solid rgba(65, 133, 244, 0.3);
-  box-shadow: 0 0 25px rgba(65, 133, 244, 0.15);
-  color: #e0f2f7;
-  padding: 0;
-  box-sizing: border-box;
-  margin-bottom: 2rem;
-}
-.re-edit-card mat-card-header {
-  border-bottom: 1px solid rgba(65, 133, 244, 0.2);
-}
-.re-edit-card mat-card-title {
-  color: #a0c0ff;
-  font-family: "Orbitron", sans-serif;
-  font-size: 1.25rem;
-}
-.re-edit-card .mat-icon {
-  color: #a0c0ff;
-}
-.re-edit-card mat-card-content {
-  padding-top: 16px;
-}
-.re-edit-card p {
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-bottom: 0.5rem;
-}
-.re-edit-card .expiry-date {
-  font-weight: bold;
-  color: #f7e733;
-  font-size: 1.1rem;
-}
-.re-edit-card mat-card-actions {
-  padding: 0 16px 16px;
-}
-.re-edit-card mat-card-actions .mat-icon {
-  margin-right: 8px;
-}
-.re-edit-card button[color="accent"] {
-  background-color: #f7e733;
-  color: #212121;
 }
 
 /* --- 6. Basic Entry Animations (Kept from your file) --- */

@@ -39,7 +39,7 @@
   font-family: "Orbitron", sans-serif;
   font-weight: 500;
   font-size: 0.95rem;
-  color: #e6f1ff;
+  color: #e6f1ff !important;
   transition: opacity 0.2s ease;
 }
 
@@ -216,28 +216,12 @@ google-map {
   .grid-analytics {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-@media (max-width: 900px) {
-  .grid-summary {
+  .candidates-grid {
     grid-template-columns: 1fr;
-  }
-  .grid-analytics {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .chart-box,
-  .map-box {
-    height: 280px;
-  }
-  .kpi-number {
-    font-size: 2.4rem;
   }
 }
 
 @media (max-width: 900px) {
-  .candidates-grid {
-    grid-template-columns: 1fr;
-  }
   .candidates-grid .map-box {
     height: 360px;
   }

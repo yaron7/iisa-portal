@@ -40,7 +40,6 @@ export const routes: Routes = [
       import(
         './features/candidates/candidate-form/candidate-form.component'
       ).then((m) => m.CandidateFormComponent),
-    canActivate: [authGuard],
     title: 'Edit Candidate',
   },
   {
