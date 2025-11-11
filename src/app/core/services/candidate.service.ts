@@ -81,9 +81,6 @@ export class CandidateService {
     return new Observable<string>((observer) => {
       uploadTask.on(
         'state_changed',
-        (snapshot) => {
-          // You can observe progress here if needed
-        },
         (error) => {
           console.error('Error uploading image:', error);
           observer.error(error);

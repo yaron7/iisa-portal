@@ -14,8 +14,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  private auth: Auth = inject(Auth); // Inject Firebase Auth service
-  currentUser$: Observable<User | null> = user(this.auth); // Observable for the current user
+  private auth: Auth = inject(Auth);
+  currentUser$: Observable<User | null> = user(this.auth);
 
   constructor() {}
 

@@ -1,11 +1,11 @@
 import { Component, Optional, AfterContentInit } from '@angular/core';
-import { AbstractControl } from '@angular/forms'; // No longer need FormControlDirective
+import { AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
   MatFormField,
   MatFormFieldModule,
   MatError,
-} from '@angular/material/form-field'; // Import MatFormField
+} from '@angular/material/form-field';
 
 // This map holds all possible error messages for the entire application
 const VALIDATION_MESSAGES: { [key: string]: (args?: any) => string } = {
@@ -20,7 +20,6 @@ const VALIDATION_MESSAGES: { [key: string]: (args?: any) => string } = {
 @Component({
   selector: 'form-validation-errors',
   standalone: true,
-  // Make sure MatError is imported and available in imports for <mat-error> to work
   imports: [CommonModule, MatFormFieldModule, MatError],
   template: `
     @if (errorMessage) {
@@ -30,8 +29,6 @@ const VALIDATION_MESSAGES: { [key: string]: (args?: any) => string } = {
   styleUrls: [],
 })
 export class FormValidationErrorsComponent implements AfterContentInit {
-  // Implement OnInit
-
   private _control: AbstractControl | null = null; // Private field to hold the control
 
   constructor(@Optional() private matFormField: MatFormField) {}

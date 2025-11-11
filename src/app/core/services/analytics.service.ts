@@ -4,11 +4,9 @@ import {
   doc,
   DocumentReference,
   DocumentData,
-  getDoc,
-  updateDoc,
-  increment, // Import the 'increment' utility
-  setDoc, // Import 'setDoc' for creating the doc if it doesn't exist
-  docData, // Import docData for live updates
+  increment,
+  setDoc,
+  docData,
 } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -50,7 +48,6 @@ export class AnalyticsService {
     ).subscribe({
       next: () => console.log('Visit tracked'),
       error: (err) => console.error('Error tracking visit:', err),
-      // We don't need to wait for this, so we subscribe here (fire and forget)
     });
   }
 

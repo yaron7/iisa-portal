@@ -52,19 +52,12 @@ export class LoginComponent implements OnInit {
 
   constructor() {
     this.loginForm = this.fb.group({
-      email: [
-        '',
-        [Validators.required, Validators.email],
-      ],
-      password: [
-        '',
-        [Validators.required, Validators.minLength(6)],
-      ],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   ngOnInit(): void {
-    // Optional: If user is already logged in, redirect to dashboard
     this.authService.isLoggedIn().subscribe((isLoggedIn) => {
       if (isLoggedIn) {
         this.router.navigate(['/dashboard']);
